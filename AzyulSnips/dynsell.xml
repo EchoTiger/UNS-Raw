@@ -1,0 +1,20 @@
+<!-- Requires the variable  SellItems which should contain an array of items to be sold and ProtectedItems which will exlude the items from being sold. -->
+<CustomBehavior File="Misc\RunLua" Lua="
+function DynSell()
+	if MerchantFrame:IsVisible()==true then
+		if buffer==nil or buffer&gt;4 then buffer=0 end
+		MerchantRepairAllButton:Click()
+		if buffer&lt;5 then
+			for s=1,GetContainerNumSlots(buffer)
+				do local n=GetContainerItemLink(buffer,s)
+					for i=1,#SellItems do 
+						if (n and string.find(n, SellItems[i]) and not (n and string.find(n, ProtectedItems[i]))) then
+							UseContainerItem(buffer,s)
+						end
+					end
+			end
+			buffer=buffer+1
+		end
+	end
+end;
+"/>
