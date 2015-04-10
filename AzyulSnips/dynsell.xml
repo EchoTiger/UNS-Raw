@@ -4,7 +4,7 @@ function FinishSell()
 	a=#MasterSellArray
 	FinishSellArray2 = {}
 	
-	if ar==nil or ar>a then ar=0 end;
+	if ar==nil or ar&gt;a then ar=0 end;
 	ar=ar+1
 	
 	for word in string.gmatch(MasterSellArray[ar], '([^,]+)') do
@@ -25,9 +25,9 @@ function DynSell()
 	MasterSellArray = {}
 	ar=0
 	if MerchantFrame:IsVisible()==true then
-		if buffer==nil or buffer>4 then buffer=0 end;
+		if buffer==nil or buffer&gt;4 then buffer=0 end;
 		MerchantRepairAllButton:Click()
-		if buffer<5 then
+		if buffer&lt;5 then
 			for s=1,GetContainerNumSlots(buffer)
 				do n=GetContainerItemLink(buffer,s)
 				if n then
