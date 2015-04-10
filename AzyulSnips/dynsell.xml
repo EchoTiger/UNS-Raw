@@ -10,9 +10,6 @@ function FinishSell()
 	for word in string.gmatch(MasterSellArray[ar], '([^,]+)') do
 		table.insert(FinishSellArray2, word)
 	end
-	
-	
-	print(&quot;Return: &quot;, MasterSellArray[ar]);
 	UseContainerItem(FinishSellArray2[1], FinishSellArray2[2]);
 end
 function ShouldSell(itemName)
