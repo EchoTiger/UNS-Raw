@@ -35,7 +35,7 @@ function DynSell()
 				do n=GetContainerItemLink(buffer,s)
 				if n then
 					if ShouldSell(n) then
-						duration = duration+.1
+						duration = duration+.17
 						arraystring = buffer .. &quot;,&quot; .. s;
 						table.insert(MasterSellArray, arraystring)
 						C_Timer.After(duration, FinishSell)
