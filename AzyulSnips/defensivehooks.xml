@@ -1,4 +1,5 @@
-<!-- Declare movement buff and defensive hooks -->
+<HBProfile>
+<QuestOrder>
 	<If Condition="Me.Class == WoWClass.Mage" >
 		<CustomBehavior File="Hooks\DoWhen" ActivityName="MoveDefHook" AllowUseDuringCombat="True" UseWhen="(Me.Combat &amp;&amp; Me.IsMoving &amp;&amp; Me.IsInInstance &amp;&amp; Me.IsAlive) &amp;&amp; (!WoWSpell.FromId(11426).Cooldown &amp;&amp; Me.KnowsSpell(11426))" > <!-- (!WoWSpell.FromId(1953).Cooldown) ||  -->
 			<CustomBehavior File="RunCode" Code="Logging.Write(System.Windows.Media.Colors.DeepSkyBlue, &quot;[Azyul]: Attempting use of passive defensive maneuvers.&quot;);" />
@@ -72,4 +73,5 @@
 			</If>
 		</CustomBehavior>
 	</If>
-<!-- END Declare movement buff hooks -->
+</QuestOrder>
+</HBProfile>
