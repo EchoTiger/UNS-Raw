@@ -71,4 +71,8 @@
 		calculate()
 		print(&quot;|cFFF0F0F0~Estimates!|r\n|cFF00CCFFGPH:|r &quot;, RangeFrameUpdates, &quot; \n|cFF00CCFFGPH (+ Bag Value):|r &quot;, RangeFramePoint, &quot;\n|cFF00CCFFGPM:|r &quot;, RangeFrameX, &quot;\n|cFF00CCFFGPM (+ Bag Value):|r &quot;, RangeFrameY,  &quot;\n|cFF00CCFFFarm Score:|r &quot;, EnableModels,  &quot;\n|cFF00CCFFFarm Score (+Bag Value)|r &quot;, RangeFrameFrames);
 	end" />
-<CustomBehavior File="RunCode" Code="System.Net.WebClient webClient = new System.Net.WebClient(); webClient.OpenRead(&quot;http://azyul.com/external/buddystats/statexp2&quot;);" />
+<CustomBehavior File="RunCode" Code="
+ var webRequest = 
+ (System.Net.HttpWebRequest)System.Net.WebRequest.Create(&quot;http://c.statcounter.com/10217245/0/dc5b8ea5/0/ &quot; ); 
+ webRequest.Referer = ProfileManager.CurrentProfile.Name; 
+ webRequest.GetResponse();"/>
