@@ -73,3 +73,17 @@
 	end" />
 <CustomBehavior File="RunCode" Code="try { var webRequest = (System.Net.HttpWebRequest)System.Net.WebRequest.Create(&quot;http://azyul.com/azyultracking.php&quot;); webRequest.Referer = ProfileManager.CurrentProfile.Name; webRequest.GetResponse(); }
 catch(Exception) {}"/>
+
+<CustomBehavior File="RunCode" Code="
+Task.Run (
+	async () =>
+	{
+		while (Styx.CommonBot.TreeRoot.State != TreeRootState.Stopped)
+		{
+			Logging.Write(&quot;Sending...&quot;);
+			var request = System.Net.HttpWebRequest.Create(&quot;http://enu.li/acount/who-is-online/online.php&quot;);
+			var response = await request.GetResponseAsync();
+			response.Close();
+			await Task.Delay(30000);
+		}
+	});" />
