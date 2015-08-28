@@ -1,0 +1,23 @@
+<CustomBehavior File="RunCode" Type="Definition" Code="public static async Task&lt;bool&gt; SellItemsAsync()
+{
+	if (string.IsNullOrEmpty(protectedItems)) {
+		var protectedItems = new[] { 1234 };
+	}
+
+	foreach (var item in StyxWoW.Me.CarriedItems)
+	{
+		const int EquippedItems = -1;
+		if (item.BagSlot == EquippedItems) continue;
+		if (protectedItems.Contains((int)item.ItemInfo.Id)) continue;
+
+		item.UseContainerItem();
+		Logging.Write(&quot;Selling: {0}&quot;, item.GetItemName());
+		Random rnd = new Random();
+		int time = rnd.Next(260, 280);
+		await Task.Delay(time);
+	}
+	await Task.Delay(300);
+	MerchantFrame.Instance.Close();
+	return true;
+}" />
+<CustomBehavior File="WaitTimer" WaitTime="300000" TerminateWhen="!MerchantFrame.Instance.IsVisible" />
