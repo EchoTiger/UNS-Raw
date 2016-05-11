@@ -31,7 +31,7 @@ ProfileManager.LoadNew(ProfileManager.XmlLocation);
 				<CustomBehavior File="ForcedDismount" />
 				<While Condition="!(Me.ZoneId == 7078 || Me.ZoneId == 7004)" >
 					<CustomBehavior File="Misc\RunLua" Lua="UseItemByName(110560);" WaitTime="500" />
-					<CustomBehavior File="WaitTimer" WaitTime="50000" TerminateWhen="!(Me.ZoneId == 7078 || Me.ZoneId == 7004) || Me.Combat || !Me.IsCasting" />
+					<CustomBehavior File="WaitTimer" WaitTime="50000" TerminateWhen="(Me.ZoneId == 7078 || Me.ZoneId == 7004) || Me.Combat || !Me.IsCasting" />
 				</While>
 			</If>
 		</If>
