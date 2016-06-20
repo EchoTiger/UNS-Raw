@@ -71,7 +71,7 @@ ProfileManager.LoadNew(ProfileManager.XmlLocation);
 			<CustomBehavior File="RunCode" Code="PandariaLog(Colors.LightGreen, &quot;Hearthing would be faster to reach our destination, attempting to Hearth!&quot;);" />
 			<CustomBehavior File="ForcedDismount" />
 			<While Condition="!(HasArrivedPandaria() || InPriorityLocationPandaria())" >
-				<CustomBehavior File="RunCode" Code="await Coroutine.Wait(1800000, () => HearthIsReadyPandaria());" />
+				<CustomBehavior File="RunCode" Code="await Coroutine.Wait(1800000, () => HearthIsReadyPandaria() || InPriorityLocationPandaria());" />
 				<CustomBehavior File="Misc\RunLua" Lua="UseItemByName(6948); UseItemByName(64488); CastSpellByID(556);" WaitTime="500" />
 				<CustomBehavior File="WaitTimer" WaitTime="50000" TerminateWhen="HasArrivedPandaria() || InPriorityLocationPandaria() || CastingInterruptedPandaria()" />
 			</While>
@@ -226,7 +226,7 @@ ProfileManager.LoadNew(ProfileManager.XmlLocation);
 			<CustomBehavior File="RunCode" Code="PandariaLog(Colors.LightGreen, &quot;Hearthing would be faster to reach our destination, attempting to Hearth!&quot;);" />
 			<CustomBehavior File="ForcedDismount" />
 			<While Condition="!(HasArrivedPandaria() || InPriorityLocationPandaria())" >
-				<CustomBehavior File="RunCode" Code="await Coroutine.Wait(1800000, () => HearthIsReadyPandaria());" />
+				<CustomBehavior File="RunCode" Code="await Coroutine.Wait(1800000, () => HearthIsReadyPandaria() || InPriorityLocationPandaria());" />
 				<CustomBehavior File="Misc\RunLua" Lua="UseItemByName(6948); UseItemByName(64488); CastSpellByID(556);" WaitTime="500" />
 				<CustomBehavior File="WaitTimer" WaitTime="50000" TerminateWhen="HasArrivedPandaria() || InPriorityLocationPandaria() || CastingInterruptedPandaria()" />
 			</While>
