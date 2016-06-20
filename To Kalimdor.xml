@@ -11,13 +11,13 @@ Bots.Professionbuddy.PBLog.Log(System.Windows.Media.Colors.DeepSkyBlue, &quot;[A
 ProfileManager.LoadNew(ProfileManager.XmlLocation);
 }" />
 <CustomBehavior File="RunCode" Type="Definition"><![CDATA[
-	bool HasArrived()
+	bool HasArrivedKalimdor()
 	{
 		if (Me.ZoneId == 7078 || Me.ZoneId == 7004) return false; // Draenor Garrisons count as instanced locations.
 		if (StyxWoW.Me.MapId == 1 || Me.IsInInstance) return true;
 		return false;
 	}
-	bool InPriorityLocation()
+	bool InPriorityLocationKalimdor()
 	{
 		if (StyxWoW.Me.IsAlliance)
 		{
@@ -30,7 +30,7 @@ ProfileManager.LoadNew(ProfileManager.XmlLocation);
 		}
 		return false;
 	}
-	bool HearthIsPriorityLocation()
+	bool HearthIsPriorityLocationKalimdor()
 	{
 		if (StyxWoW.Me.IsAlliance)
 		{
@@ -44,34 +44,41 @@ ProfileManager.LoadNew(ProfileManager.XmlLocation);
 		if (Styx.WoWInternals.DBC.AreaTable.FromId(StyxWoW.Me.HearthstoneAreaId).MapId == 1) return true; // All Kalimdor inns.
 		return false;
 	}
-	bool HearthIsReady()
+	bool HearthIsReadyKalimdor()
 	{
 		if (HasItem(64488) && !WoWSpell.FromId(94719).Cooldown) return true; // Innkeeper's Daughter
 		if (HasItem(6948) && !WoWSpell.FromId(8690).Cooldown) return true; // Hearthstone
 		if (SpellManager.CanCast(556)) return true; // Astral Recall
 		return false;
 	}
-	bool CastingInterrupted()
+	bool HasHearthKalimdor()
+	{
+		if (HasItem(64488)) return true; // Innkeeper Daughter
+		if (HasItem(6948)) return true; // Hearthstone
+		if (SpellManager.CanCast(556)) return true; // Astral Recall
+		return false;
+	}
+	bool CastingInterruptedKalimdor()
 	{
 		if (StyxWoW.Me.Combat || !Me.IsCasting) return true;
 		return false;
 	}
-	void Log(System.Windows.Media.Color color, string message)
+	void KalimdorLog(System.Windows.Media.Color color, string message)
 	{
 		Bots.Professionbuddy.PBLog.Log(System.Windows.Media.Colors.DeepSkyBlue, "[Azyul Navigator]: ", color, $"{message}");
 	}
 	]]>
 </CustomBehavior>
-<If Condition="!HasArrived()" >
-	<CustomBehavior File="RunCode" Code="Log(Colors.LightGreen, &quot;Going to Kalimdor!&quot;);" />
+<If Condition="!HasArrivedKalimdor()" >
+	<CustomBehavior File="RunCode" Code="KalimdorLog(Colors.LightGreen, &quot;Going to Kalimdor!&quot;);" />
 
 	<!-- /// Druid Logic /// -->
 	<If Condition="SpellManager.CanCast(18960)" > <!-- Checks if we're a Druid and spell is fully learnt+castable -->
-		<CustomBehavior File="RunCode" Code="Log(Colors.LightGreen, &quot;We're a Druid! Teleporting to Kalimdor.&quot;);" />
+		<CustomBehavior File="RunCode" Code="KalimdorLog(Colors.LightGreen, &quot;We're a Druid! Teleporting to Kalimdor.&quot;);" />
 		<CustomBehavior File="ForcedDismount" />
-		<While Condition="!HasArrived()" >
+		<While Condition="!HasArrivedKalimdor()" >
 			<CustomBehavior File="Misc\RunLua" Lua="CastSpellByID(18960);" WaitTime="500" />
-			<CustomBehavior File="WaitTimer" WaitTime="50000" TerminateWhen="HasArrived() || CastingInterrupted()" />
+			<CustomBehavior File="WaitTimer" WaitTime="50000" TerminateWhen="HasArrivedKalimdor() || CastingInterruptedKalimdor()" />
 			<CustomBehavior File="InteractWith" MobId="190942" WaitForNpcs="false" />
 		</While>
 	</If>
@@ -79,41 +86,41 @@ ProfileManager.LoadNew(ProfileManager.XmlLocation);
 	<If Condition="Me.IsAlliance" >
 		<!-- /// Mage Logic /// -->
 		<If Condition="SpellManager.CanCast(49359)" > <!-- Checks if we're a mage and spell is fully learnt+castable -->
-			<CustomBehavior File="RunCode" Code="Log(Colors.LightGreen, &quot;We're a Mage! Teleporting to Kalimdor.&quot;);" />
+			<CustomBehavior File="RunCode" Code="KalimdorLog(Colors.LightGreen, &quot;We're a Mage! Teleporting to Kalimdor.&quot;);" />
 			<CustomBehavior File="ForcedDismount" />
-			<While Condition="!HasArrived()" >
+			<While Condition="!HasArrivedKalimdor()" >
 				<CustomBehavior File="Misc\RunLua" Lua="CastSpellByID(49359);" WaitTime="500" />
-				<CustomBehavior File="WaitTimer" WaitTime="50000" TerminateWhen="HasArrived() || CastingInterrupted()" />
+				<CustomBehavior File="WaitTimer" WaitTime="50000" TerminateWhen="HasArrivedKalimdor() || CastingInterruptedKalimdor()" />
 			</While>
 		</If>
 		<!-- /// Item Teleportation Logic.   Teleport to area that has portals (Shrine/etc) or teleport to destination /// -->
-		<If Condition="!HasArrived() &amp;&amp; HearthIsPriorityLocation() &amp;&amp; !InPriorityLocation()" >
-			<CustomBehavior File="RunCode" Code="Log(Colors.LightGreen, &quot;Hearthing would be faster to reach our destination, attempting to Hearth!&quot;);" />
+		<If Condition="!HasArrivedKalimdor() &amp;&amp; HearthIsPriorityLocationKalimdor() &amp;&amp; !InPriorityLocationKalimdor()" >
+			<CustomBehavior File="RunCode" Code="KalimdorLog(Colors.LightGreen, &quot;Hearthing would be faster to reach our destination, attempting to Hearth!&quot;);" />
 			<CustomBehavior File="ForcedDismount" />
-			<While Condition="!(HasArrived() || InPriorityLocation())" >
-				<CustomBehavior File="RunCode" Code="await Coroutine.Wait(1800000, () => HearthIsReady());" />
+			<While Condition="!(HasArrivedKalimdor() || InPriorityLocationKalimdor()) &amp;&amp; HasHearthKalimdor()" >
+				<CustomBehavior File="RunCode" Code="await Coroutine.Wait(1800000, () => HearthIsReadyKalimdor());" />
 				<CustomBehavior File="Misc\RunLua" Lua="UseItemByName(6948); UseItemByName(64488); CastSpellByID(556);" WaitTime="500" />
-				<CustomBehavior File="WaitTimer" WaitTime="50000" TerminateWhen="HasArrived() || InPriorityLocation() || CastingInterrupted()" />
+				<CustomBehavior File="WaitTimer" WaitTime="50000" TerminateWhen="HasArrivedKalimdor() || InPriorityLocationKalimdor() || CastingInterruptedKalimdor()" />
 			</While>
 		</If>
 		<!-- /// Generic Logic /// -->
 		<If Condition="Me.ZoneId == 4080" > <!-- Isle of Quel'Danas -->
-			<CustomBehavior File="RunCode" Code="Log(Colors.LightGreen, &quot;We're in Isle of Quel'Danas, using the Flight Master to Stormwind.&quot;);" />
+			<CustomBehavior File="RunCode" Code="KalimdorLog(Colors.LightGreen, &quot;We're in Isle of Quel'Danas, using the Flight Master to Stormwind.&quot;);" />
 			<MoveTo DestName="Ohura, the flight master." X="13009.74" Y="-6910.024" Z="9.584676" />
 			<CustomBehavior File="InteractWith" MobId="26560" X="13012.39" Y="-6911.189" Z="9.586156" WaitTime="850" />
 			<CustomBehavior File="WaitTimer" WaitTime="600000" TerminateWhen="!Me.OnTaxi" />
 			<CustomBehavior File="Misc\RunLua" Lua="TaxiButton1:Click();" WaitTime="1000" />
 		</If>
 		<If Condition="(Me.ZoneId == 3557 || Me.ZoneId == 3524 || Me.ZoneId == 6456 || Me.ZoneId == 3525)" > <!-- Instanced Draenei Zone, shares MapId with Outlands so we're using ZoneId -->
-			<CustomBehavior File="RunCode" Code="Log(Colors.LightGreen, &quot;We're a in Azure/Bloodmyst Isle, using the Exodar portal to Darnassus.&quot;);" />
+			<CustomBehavior File="RunCode" Code="KalimdorLog(Colors.LightGreen, &quot;We're a in Azure/Bloodmyst Isle, using the Exodar portal to Darnassus.&quot;);" />
 			<MoveTo DestName="The Vault of Lights, portal to Darnassus." X="-4040.254" Y="-11569.56" Z="-138.4055" />
-			<While Condition="!HasArrived()" >
-				<CustomBehavior File="InteractWith" MobId="207996" X="-4047.53" Y="-11569.33" Z="-138.4902" TerminateWhen="HasArrived()" />
-				<CustomBehavior File="WaitTimer" WaitTime="50000" TerminateWhen="HasArrived() || Me.Combat" />
+			<While Condition="!HasArrivedKalimdor()" >
+				<CustomBehavior File="InteractWith" MobId="207996" X="-4047.53" Y="-11569.33" Z="-138.4902" TerminateWhen="HasArrivedKalimdor()" />
+				<CustomBehavior File="WaitTimer" WaitTime="50000" TerminateWhen="HasArrivedKalimdor() || Me.Combat" />
 			</While>
 		</If>
 		<If Condition="Me.MapId == 530" > <!-- Outlands -->
-			<CustomBehavior File="RunCode" Code="Log(Colors.LightGreen, &quot;We're in Outlands, using the Shattrath portal to Stormwind.&quot;);" />
+			<CustomBehavior File="RunCode" Code="KalimdorLog(Colors.LightGreen, &quot;We're in Outlands, using the Shattrath portal to Stormwind.&quot;);" />
 			<MoveTo Nav="Fly" X="-1892.768" Y="5392.862" Z="-12.4277" />
 			<While Condition="Me.MapId != 0" >
 				<CustomBehavior File="InteractWith" MobId="183325" X="-1894.189" Y="5387.939" Z="-12.42825" TerminateWhen="Me.MapId == 0" />
@@ -121,7 +128,7 @@ ProfileManager.LoadNew(ProfileManager.XmlLocation);
 			</While>
 		</If>
 		<If Condition="Me.MapId == 646" > <!-- Deepholm -->
-			<CustomBehavior File="RunCode" Code="Log(Colors.LightGreen, &quot;We're in Deepholm, using the portal for Stormwind.&quot;);" />
+			<CustomBehavior File="RunCode" Code="KalimdorLog(Colors.LightGreen, &quot;We're in Deepholm, using the portal for Stormwind.&quot;);" />
 			<MoveTo Nav="Fly" X="968.8371" Y="573.3804" Z="-44.5801" />
 			<While Condition="Me.MapId != 0" >
 				<CustomBehavior File="InteractWith" MobId="205272" X="965.25" Y="577.229" Z="-44.2583" TerminateWhen="Me.MapId == 0" />
@@ -129,12 +136,12 @@ ProfileManager.LoadNew(ProfileManager.XmlLocation);
 			</While>
 		</If>
 		<If Condition="Me.CurrentMap.ExpansionId == 5" > <!-- Draenor -->
-			<CustomBehavior File="RunCode" Code="Log(Colors.LightGreen, &quot;We're in Draenor, using the Ashran portal to Stormwind.&quot;);" />
+			<CustomBehavior File="RunCode" Code="KalimdorLog(Colors.LightGreen, &quot;We're in Draenor, using the Ashran portal to Stormwind.&quot;);" />
 			<If Condition="Me.Y &gt; -3509.631" > <!-- Not in Ashran -->
 				<If Condition="Me.BagItems.FirstOrDefault(h => h.Entry == 110560).CooldownTimeLeft.TotalMilliseconds == 0 &amp;&amp; Me.ZoneId != 7078" > <!-- Can cast G-Hearth and Outside of Garrison. -->
 					<While Condition="Me.ZoneId != 7078" >
 						<CustomBehavior File="Misc\RunLua" Lua="UseItemByName(110560);" WaitTime="500" />
-						<CustomBehavior File="WaitTimer" WaitTime="50000" TerminateWhen="Me.ZoneId == 7078 || CastingInterrupted()" />
+						<CustomBehavior File="WaitTimer" WaitTime="50000" TerminateWhen="Me.ZoneId == 7078 || CastingInterruptedKalimdor()" />
 					</While>
 					<Else>
 						<MoveTo DestName="Garrison" X="1866.757" Y="222.1068" Z="76.69209" />
@@ -163,7 +170,7 @@ ProfileManager.LoadNew(ProfileManager.XmlLocation);
 		</If>
 		<If Condition="Me.MapId == 571" > <!-- Northrend -->
 			<If Condition="Me.Y &gt;= 3000 &amp;&amp; Me.MapId == 571" > <!-- Western Northrend, Valiance Keep to Stormwind -->
-				<CustomBehavior File="RunCode" Code="Log(Colors.LightGreen, &quot;We're in Western Northrend, using the Valiance Keep boat to Stormwind.&quot;);" />
+				<CustomBehavior File="RunCode" Code="KalimdorLog(Colors.LightGreen, &quot;We're in Western Northrend, using the Valiance Keep boat to Stormwind.&quot;);" />
 				<MoveTo Nav="Fly" X="2232.81" Y="5135.507" Z="5.343734" />
 				<CustomBehavior File="ForcedDismount" />
 				<DisableBehavior Name="FlightPath" />
@@ -177,7 +184,7 @@ ProfileManager.LoadNew(ProfileManager.XmlLocation);
 				<EnableBehavior Name="FlightPath" />
 			</If>
 			<If Condition="Me.Y &lt; 3000 &amp;&amp; Me.Y &gt; -2200 &amp;&amp; Me.MapId == 571" > <!-- Middle Northrend, Dalaran to Stormwind -->
-				<CustomBehavior File="RunCode" Code="Log(Colors.LightGreen, &quot;We're in Mid-Northrend, using the Dalaran portal to Stormwind.&quot;);" />
+				<CustomBehavior File="RunCode" Code="KalimdorLog(Colors.LightGreen, &quot;We're in Mid-Northrend, using the Dalaran portal to Stormwind.&quot;);" />
 				<MoveTo Nav="Fly" X="5719.701" Y="722.6963" Z="641.6025" />
 				<While Condition="Me.MapId != 0" >
 					<CustomBehavior File="InteractWith" MobId="190960" X="5719.184" Y="719.6667" Z="641.7278" TerminateWhen="Me.MapId == 0" />
@@ -185,7 +192,7 @@ ProfileManager.LoadNew(ProfileManager.XmlLocation);
 				</While>
 			</If>
 			<If Condition="Me.Y &lt;= -2200 &amp;&amp; Me.MapId == 571" > <!-- Eastern Northrend, Valgarde Port to Stormwind -->
-				<CustomBehavior File="RunCode" Code="Log(Colors.LightGreen, &quot;We're in Eastern Northrend, using the Valgarde Port boat to Menethil Harbor.&quot;);" />
+				<CustomBehavior File="RunCode" Code="KalimdorLog(Colors.LightGreen, &quot;We're in Eastern Northrend, using the Valgarde Port boat to Menethil Harbor.&quot;);" />
 				<MoveTo X="589.7719" Y="-5100.328" Z="5.261706" />
 				<DisableBehavior Name="FlightPath" />
 				<CustomBehavior File="UseTransport" TransportId="181688"
@@ -199,19 +206,19 @@ ProfileManager.LoadNew(ProfileManager.XmlLocation);
 			</If>
 		</If>
 		<If Condition="Me.MapId == 870" > <!-- Pandaria -->
-			<CustomBehavior File="RunCode" Code="Log(Colors.LightGreen, &quot;We're in Pandaria, using the Shrine portal to Darnassus.&quot;);" />
+			<CustomBehavior File="RunCode" Code="KalimdorLog(Colors.LightGreen, &quot;We're in Pandaria, using the Shrine portal to Darnassus.&quot;);" />
 			<If Condition="Me.ZoneId != 6553" > <!-- If not inside of Shrine building -->
 				<MoveTo Nav="Fly" X="861.8756" Y="283.1115" Z="503.678" />
 			</If>
 			<MoveTo X="809.8257" Y="161.3773" Z="519.6681" />
-			<While Condition="!HasArrived()" >
-				<CustomBehavior File="InteractWith" MobId="215116" X="812.344" Y="159.2518" Z="519.9393" TerminateWhen="HasArrived()" />
-				<CustomBehavior File="WaitTimer" WaitTime="50000" TerminateWhen="HasArrived() || Me.Combat" />
+			<While Condition="!HasArrivedKalimdor()" >
+				<CustomBehavior File="InteractWith" MobId="215116" X="812.344" Y="159.2518" Z="519.9393" TerminateWhen="HasArrivedKalimdor()" />
+				<CustomBehavior File="WaitTimer" WaitTime="50000" TerminateWhen="HasArrivedKalimdor() || Me.Combat" />
 			</While>
 		</If>
 		<If Condition="Me.MapId == 0" > <!-- Eastern Kingdoms -->
 			<If Condition="Me.X &lt;= -11375" > <!-- Booty Bay to Ratchet -->
-				<CustomBehavior File="RunCode" Code="Log(Colors.LightGreen, &quot;We're in Eastern Kingdoms, going to Booty Bay to take the boat to Ratchet.&quot;);" />
+				<CustomBehavior File="RunCode" Code="KalimdorLog(Colors.LightGreen, &quot;We're in Eastern Kingdoms, going to Booty Bay to take the boat to Ratchet.&quot;);" />
 				<MoveTo Nav="Fly" X="-14284.1" Y="558.6824" Z="8.684329" />
 				<CustomBehavior File="ForcedDismount" />
 				<CustomBehavior File="UseTransport" TransportId="20808"
@@ -222,7 +229,7 @@ ProfileManager.LoadNew(ProfileManager.XmlLocation);
 					GetOffX="-994.4224" GetOffY="-3829.305" GetOffZ="5.609204" />
 			</If>
 			<If Condition="Me.X &gt; -11375 &amp;&amp; Me.MapId == 0" > <!-- Stormwind Docks to Darnassus -->
-				<CustomBehavior File="RunCode" Code="Log(Colors.LightGreen, &quot;We're in Eastern Kingdoms, going to the Stormwind Docks to take the boat to Rut'theran Village.&quot;);" />
+				<CustomBehavior File="RunCode" Code="KalimdorLog(Colors.LightGreen, &quot;We're in Eastern Kingdoms, going to the Stormwind Docks to take the boat to Rut'theran Village.&quot;);" />
 				<MoveTo Nav="Fly" X="-8643.703" Y="1326.355" Z="5.536546" />
 				<CustomBehavior File="ForcedDismount" />
 				<CustomBehavior File="UseTransport" TransportId="176310"
@@ -238,26 +245,26 @@ ProfileManager.LoadNew(ProfileManager.XmlLocation);
 	<If Condition="Me.IsHorde" >
 		<!-- /// Mage Logic /// -->
 		<If Condition="SpellManager.CanCast(3567)" > <!-- Checks if we're a mage and spell is fully learnt+castable -->
-			<CustomBehavior File="RunCode" Code="Log(Colors.LightGreen, &quot;We're a Mage! Teleporting to Orgrimmar.&quot;);" />
+			<CustomBehavior File="RunCode" Code="KalimdorLog(Colors.LightGreen, &quot;We're a Mage! Teleporting to Orgrimmar.&quot;);" />
 			<CustomBehavior File="ForcedDismount" />
-			<While Condition="!HasArrived()" >
+			<While Condition="!HasArrivedKalimdor()" >
 				<CustomBehavior File="Misc\RunLua" Lua="CastSpellByID(3567);" WaitTime="500" />
-				<CustomBehavior File="WaitTimer" WaitTime="50000" TerminateWhen="HasArrived() || CastingInterrupted()" />
+				<CustomBehavior File="WaitTimer" WaitTime="50000" TerminateWhen="HasArrivedKalimdor() || CastingInterruptedKalimdor()" />
 			</While>
 		</If>
 		<!-- /// Item Teleportation Logic.   Teleport to area that has portals (Shrine/etc) or teleport to destination /// -->
-		<If Condition="!HasArrived() &amp;&amp; HearthIsPriorityLocation() &amp;&amp; !InPriorityLocation()" >
-			<CustomBehavior File="RunCode" Code="Log(Colors.LightGreen, &quot;Hearthing would be faster to reach our destination, attempting to Hearth!&quot;);" />
+		<If Condition="!HasArrivedKalimdor() &amp;&amp; HearthIsPriorityLocationKalimdor() &amp;&amp; !InPriorityLocationKalimdor()" >
+			<CustomBehavior File="RunCode" Code="KalimdorLog(Colors.LightGreen, &quot;Hearthing would be faster to reach our destination, attempting to Hearth!&quot;);" />
 			<CustomBehavior File="ForcedDismount" />
-			<While Condition="!(HasArrived() || InPriorityLocation())" >
-				<CustomBehavior File="RunCode" Code="await Coroutine.Wait(1800000, () => HearthIsReady());" />
+			<While Condition="!(HasArrivedKalimdor() || InPriorityLocationKalimdor())" >
+				<CustomBehavior File="RunCode" Code="await Coroutine.Wait(1800000, () => HearthIsReadyKalimdor());" />
 				<CustomBehavior File="Misc\RunLua" Lua="UseItemByName(6948); UseItemByName(64488); CastSpellByID(556);" WaitTime="500" />
-				<CustomBehavior File="WaitTimer" WaitTime="50000" TerminateWhen="HasArrived() || InPriorityLocation() || CastingInterrupted()" />
+				<CustomBehavior File="WaitTimer" WaitTime="50000" TerminateWhen="HasArrivedKalimdor() || InPriorityLocationKalimdor() || CastingInterruptedKalimdor()" />
 			</While>
 		</If>
 		<!-- /// Generic Logic /// -->
 		<If Condition="Me.ZoneId == 6455 || Me.ZoneId == 3430 || Me.ZoneId == 3487 || Me.ZoneId == 3433" > <!-- Sunstrider Isle, Eversong Woods, Silvermoon City, Ghostlands -->
-			<CustomBehavior File="RunCode" Code="Log(Colors.LightGreen, &quot;We're in northen Eastern Kingdoms.  Using the Orb of Translocation to enter Undercity.&quot;);" />
+			<CustomBehavior File="RunCode" Code="KalimdorLog(Colors.LightGreen, &quot;We're in northen Eastern Kingdoms.  Using the Orb of Translocation to enter Undercity.&quot;);" />
 			<MoveTo DestName="Inner Sanctum" X="10039.12" Y="-7000.733" Z="61.95295" />
 			<While Condition="Me.ZoneId != 85" >
 				<CustomBehavior File="InteractWith" MobId="184502" X="10032.36" Y="-7000.288" Z="61.30979" WaitTime="2500" />
@@ -265,7 +272,7 @@ ProfileManager.LoadNew(ProfileManager.XmlLocation);
 			</While>
 		</If>
 		<If Condition="Me.ZoneId == 4080" > <!-- Isle of Quel'Danas -->
-			<CustomBehavior File="RunCode" Code="Log(Colors.LightGreen, &quot;We're in Isle of Quel'Danas, using the Flight Master to Undercity.&quot;);" />
+			<CustomBehavior File="RunCode" Code="KalimdorLog(Colors.LightGreen, &quot;We're in Isle of Quel'Danas, using the Flight Master to Undercity.&quot;);" />
 			<MoveTo DestName="Ohura, the flight master." X="13009.74" Y="-6910.024" Z="9.584676" />
 			<CustomBehavior File="InteractWith" MobId="26560" X="13012.39" Y="-6911.189" Z="9.586156" WaitTime="850" />
 			<CustomBehavior File="WaitTimer" WaitTime="600000" TerminateWhen="!Me.OnTaxi" />
@@ -273,7 +280,7 @@ ProfileManager.LoadNew(ProfileManager.XmlLocation);
 		</If>
 		<If Condition="Me.MapId == 571" > <!-- Northrend -->
 			<If Condition="Me.Y &gt;= 3000 &amp;&amp; Me.MapId == 571" > <!-- Western Northrend, Warsong Hold to Orgrimmar -->
-				<CustomBehavior File="RunCode" Code="Log(Colors.LightGreen, &quot;We're in Western Northrend, using the Warsong Hold zeppelin to Orgrimmar.&quot;);" />
+				<CustomBehavior File="RunCode" Code="KalimdorLog(Colors.LightGreen, &quot;We're in Western Northrend, using the Warsong Hold zeppelin to Orgrimmar.&quot;);" />
 				<CustomBehavior File="FlyTo" X="2946.323" Y="6069.065" Z="147.4432" />
 				<DisableBehavior Name="FlightPath" />
 				<CustomBehavior File="MyCTM" X="2829.086" Y="6176.118" Z="128.0574" />
@@ -289,15 +296,15 @@ ProfileManager.LoadNew(ProfileManager.XmlLocation);
 				<EnableBehavior Name="FlightPath" />
 			</If>
 			<If Condition="Me.Y &lt; 3000 &amp;&amp; Me.Y &gt; -2200 &amp;&amp; Me.MapId == 571" > <!-- Middle Northrend, Dalaran to Orgrimmar -->
-				<CustomBehavior File="RunCode" Code="Log(Colors.LightGreen, &quot;We're in Northrend, using the Dalaran portal to Orgrimmar.&quot;);" />
+				<CustomBehavior File="RunCode" Code="KalimdorLog(Colors.LightGreen, &quot;We're in Northrend, using the Dalaran portal to Orgrimmar.&quot;);" />
 				<MoveTo Nav="Fly" X="5923.893" Y="589.9543" Z="639.8708" />
-				<While Condition="!HasArrived()" >
-					<CustomBehavior File="InteractWith" MobId="191009" X="5925.874" Y="593.1875" Z="640.5933" TerminateWhen="HasArrived()" />
-					<CustomBehavior File="WaitTimer" WaitTime="50000" TerminateWhen="HasArrived() || Me.Combat" />
+				<While Condition="!HasArrivedKalimdor()" >
+					<CustomBehavior File="InteractWith" MobId="191009" X="5925.874" Y="593.1875" Z="640.5933" TerminateWhen="HasArrivedKalimdor()" />
+					<CustomBehavior File="WaitTimer" WaitTime="50000" TerminateWhen="HasArrivedKalimdor() || Me.Combat" />
 				</While>
 			</If>
 			<If Condition="Me.Y &lt;= -2200 &amp;&amp; Me.MapId == 571" > <!-- Eastern Northrend, Vengeance Landing to Thunder Bluff -->
-				<CustomBehavior File="RunCode" Code="Log(Colors.LightGreen, &quot;We're in Eastern Northrend, using the Vengeance Landing zeppelin to Undercity.&quot;);" />
+				<CustomBehavior File="RunCode" Code="KalimdorLog(Colors.LightGreen, &quot;We're in Eastern Northrend, using the Vengeance Landing zeppelin to Undercity.&quot;);" />
 				<MoveTo Nav="Fly" X="1974.872" Y="-6098.991" Z="67.15174" />
 				<DisableBehavior Name="FlightPath" />
 				<CustomBehavior File="UseTransport" TransportId="181689"
@@ -311,20 +318,20 @@ ProfileManager.LoadNew(ProfileManager.XmlLocation);
 			</If>
 		</If>
 		<If Condition="Me.MapId == 530" > <!-- Outlands -->
-			<CustomBehavior File="RunCode" Code="Log(Colors.LightGreen, &quot;We're in Outlands, using the Shattrath portal to Orgrimmar.&quot;);" />
+			<CustomBehavior File="RunCode" Code="KalimdorLog(Colors.LightGreen, &quot;We're in Outlands, using the Shattrath portal to Orgrimmar.&quot;);" />
 			<MoveTo Nav="Fly" X="-1898.129" Y="5395.677" Z="-12.42727" />
-			<While Condition="!HasArrived()" >
-				<CustomBehavior File="InteractWith" MobId="183323" X="-1899.45" Y="5393.01" Z="-12.42832" TerminateWhen="HasArrived()" />
-				<CustomBehavior File="WaitTimer" WaitTime="50000" TerminateWhen="HasArrived() || Me.Combat" />
+			<While Condition="!HasArrivedKalimdor()" >
+				<CustomBehavior File="InteractWith" MobId="183323" X="-1899.45" Y="5393.01" Z="-12.42832" TerminateWhen="HasArrivedKalimdor()" />
+				<CustomBehavior File="WaitTimer" WaitTime="50000" TerminateWhen="HasArrivedKalimdor() || Me.Combat" />
 			</While>
 		</If>
 		<If Condition="Me.CurrentMap.ExpansionId == 5" > <!-- Draenor -->
-			<CustomBehavior File="RunCode" Code="Log(Colors.LightGreen, &quot;We're in Draenor, using the Ashran portal to Orgrimmar.&quot;);" />
+			<CustomBehavior File="RunCode" Code="KalimdorLog(Colors.LightGreen, &quot;We're in Draenor, using the Ashran portal to Orgrimmar.&quot;);" />
 			<If Condition="Me.Y &gt; -3509.631" > <!-- Not in Ashran -->
 				<If Condition="Me.BagItems.FirstOrDefault(h => h.Entry == 110560).CooldownTimeLeft.TotalMilliseconds == 0 &amp;&amp; Me.ZoneId != 7004" > <!-- Can cast G-Hearth and Outside of Garrison. -->
 					<While Condition="Me.ZoneId != 7004" >
 						<CustomBehavior File="Misc\RunLua" Lua="UseItemByName(110560);" WaitTime="500" />
-						<CustomBehavior File="WaitTimer" WaitTime="50000" TerminateWhen="Me.ZoneId == 7004 || CastingInterrupted()" />
+						<CustomBehavior File="WaitTimer" WaitTime="50000" TerminateWhen="Me.ZoneId == 7004 || CastingInterruptedKalimdor()" />
 					</While>
 					<Else>
 						<MoveTo DestName="Garrison" X="5592.404" Y="4529.675" Z="126.3718" />
@@ -353,11 +360,11 @@ ProfileManager.LoadNew(ProfileManager.XmlLocation);
 			</While>
 		</If>
 		<If Condition="Me.MapId == 646" > <!-- Deepholm -->
-			<CustomBehavior File="RunCode" Code="Log(Colors.LightGreen, &quot;We're in Deepholm, using the portal for Orgrimmar.&quot;);" />
+			<CustomBehavior File="RunCode" Code="KalimdorLog(Colors.LightGreen, &quot;We're in Deepholm, using the portal for Orgrimmar.&quot;);" />
 			<MoveTo Nav="Fly" X="991.8574" Y="458.2401" Z="-44.27066" />
-			<While Condition="!HasArrived()" >
-				<CustomBehavior File="InteractWith" MobId="205273" X="990.495" Y="454.457" Z="-44.2477" TerminateWhen="HasArrived()" />
-				<CustomBehavior File="WaitTimer" WaitTime="50000" TerminateWhen="HasArrived() || Me.Combat" />
+			<While Condition="!HasArrivedKalimdor()" >
+				<CustomBehavior File="InteractWith" MobId="205273" X="990.495" Y="454.457" Z="-44.2477" TerminateWhen="HasArrivedKalimdor()" />
+				<CustomBehavior File="WaitTimer" WaitTime="50000" TerminateWhen="HasArrivedKalimdor() || Me.Combat" />
 			</While>
 		</If>
 
@@ -366,7 +373,7 @@ ProfileManager.LoadNew(ProfileManager.XmlLocation);
 		</If> -->
 		<If Condition="Me.MapId == 0" > <!-- Eastern Kingdoms -->
 			<If Condition="Me.X &gt;= -5275 &amp;&amp; Me.MapId == 0" >
-				<CustomBehavior File="RunCode" Code="Log(Colors.LightGreen, &quot;We're in Eastern Kingdoms, using the Undercity Zeppelin to Kalimdor.&quot;);" />
+				<CustomBehavior File="RunCode" Code="KalimdorLog(Colors.LightGreen, &quot;We're in Eastern Kingdoms, using the Undercity Zeppelin to Kalimdor.&quot;);" />
 				<MoveTo Nav="Fly" X="2067.433" Y="286.6822" Z="97.03147" />
 				<CustomBehavior File="ForcedDismount" />
 				<MoveTo WaitAtX="2061.913" WaitAtY="365.0161" WaitAtZ="82.51536" />
@@ -378,7 +385,7 @@ ProfileManager.LoadNew(ProfileManager.XmlLocation);
 					GetOffX="1840.091" GetOffY="-4392.189" GetOffZ="135.233" />
 			</If>
 			<If Condition="Me.X &lt; -5275 &amp;&amp; Me.MapId == 0" >
-				<CustomBehavior File="RunCode" Code="Log(Colors.LightGreen, &quot;We're in Eastern Kingdoms, going to Booty Bay to take the boat to Ratchet.&quot;);" />
+				<CustomBehavior File="RunCode" Code="KalimdorLog(Colors.LightGreen, &quot;We're in Eastern Kingdoms, going to Booty Bay to take the boat to Ratchet.&quot;);" />
 				<MoveTo Nav="Fly" X="-14284.1" Y="558.6824" Z="8.684329" />
 				<CustomBehavior File="ForcedDismount" />
 				<CustomBehavior File="UseTransport" TransportId="20808"
@@ -390,17 +397,17 @@ ProfileManager.LoadNew(ProfileManager.XmlLocation);
 			</If>
 		</If>
 		<If Condition="Me.MapId == 870" > <!-- Pandaria -->
-			<CustomBehavior File="RunCode" Code="Log(Colors.LightGreen, &quot;We're in Pandaria, using the Shrine portal to Orgrimmar.&quot;);" />
+			<CustomBehavior File="RunCode" Code="KalimdorLog(Colors.LightGreen, &quot;We're in Pandaria, using the Shrine portal to Orgrimmar.&quot;);" />
 			<If Condition="Me.ZoneId != 6141" > <!-- If not inside of Shrine building -->
 				<MoveTo Nav="Fly" X="1629.72" Y="924.5151" Z="471.1836" />
 			</If>
 			<MoveTo X="1734.699" Y="876.1328" Z="487.1131" />
-			<While Condition="!HasArrived()" >
-				<CustomBehavior File="InteractWith" MobId="215127" X="1735.073" Y="873.5676" Z="487.4114" TerminateWhen="HasArrived()" />
-				<CustomBehavior File="WaitTimer" WaitTime="50000" TerminateWhen="HasArrived() || Me.Combat" />
+			<While Condition="!HasArrivedKalimdor()" >
+				<CustomBehavior File="InteractWith" MobId="215127" X="1735.073" Y="873.5676" Z="487.4114" TerminateWhen="HasArrivedKalimdor()" />
+				<CustomBehavior File="WaitTimer" WaitTime="50000" TerminateWhen="HasArrivedKalimdor() || Me.Combat" />
 			</While>
 		</If>
 	</If>
-	<CustomBehavior File="RunCode" Code="Log(Colors.LightGreen, &quot;We have reached Kalimdor!&quot;);" />
+	<CustomBehavior File="RunCode" Code="KalimdorLog(Colors.LightGreen, &quot;We have reached Kalimdor!&quot;);" />
 </If>
 <!-- Universal Nav End -->
