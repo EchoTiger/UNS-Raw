@@ -29,7 +29,7 @@ ProfileManager.LoadNew(ProfileManager.XmlLocation);
 		}
 		return false;
 	}
-	bool HearthIsPriorityLocation()
+	bool HearthIsPriorityLocationNorthrend()
 	{
 		if (StyxWoW.Me.IsAlliance)
 		{
