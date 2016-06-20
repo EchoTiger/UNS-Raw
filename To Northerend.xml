@@ -83,10 +83,10 @@ ProfileManager.LoadNew(ProfileManager.XmlLocation);
 			</While>
 		</If>
 		<!-- /// Item Teleportation Logic.   Teleport to area that has portals (Shrine/etc) or teleport to destination /// -->
-		<If Condition="!HasArrivedNorthrend() &amp;&amp; HearthIsPriorityLocation() &amp;&amp; !InPriorityLocationNorthrend()" >
+		<If Condition="!HasArrivedNorthrend() &amp;&amp; HearthIsPriorityLocationNorthrend() &amp;&amp; !InPriorityLocationNorthrend() &amp;&amp; HasHearthNorthrend()" >
 			<CustomBehavior File="RunCode" Code="NorthrendLog(Colors.LightGreen, &quot;Hearthing would be faster to reach our destination, attempting to Hearth!&quot;);" />
 			<CustomBehavior File="ForcedDismount" />
-			<While Condition="!(HasArrivedNorthrend() || InPriorityLocationNorthrend()) &amp;&amp; HasHearthNorthrend()" >
+			<While Condition="!(HasArrivedNorthrend() || InPriorityLocationNorthrend())" >
 				<CustomBehavior File="RunCode" Code="await Coroutine.Wait(1800000, () => HearthIsReadyNorthrend());" />
 				<CustomBehavior File="Misc\RunLua" Lua="UseItemByName(6948); UseItemByName(64488); CastSpellByID(556);" WaitTime="500" />
 				<CustomBehavior File="WaitTimer" WaitTime="50000" TerminateWhen="HasArrivedNorthrend() || InPriorityLocationNorthrend() || CastingInterruptedKalimdor()" />
@@ -232,7 +232,7 @@ ProfileManager.LoadNew(ProfileManager.XmlLocation);
 			</While>
 		</If>
 		<!-- /// Item Teleportation Logic.   Teleport to area that has portals (Shrine/etc) or teleport to destination /// -->
-		<If Condition="!HasArrivedNorthrend() &amp;&amp; HearthIsPriorityLocation() &amp;&amp; !InPriorityLocationNorthrend()" >
+		<If Condition="!HasArrivedNorthrend() &amp;&amp; HearthIsPriorityLocationNorthrend() &amp;&amp; !InPriorityLocationNorthrend() &amp;&amp; HasHearthNorthrend()" >
 			<CustomBehavior File="RunCode" Code="NorthrendLog(Colors.LightGreen, &quot;Hearthing would be faster to reach our destination, attempting to Hearth!&quot;);" />
 			<CustomBehavior File="ForcedDismount" />
 			<While Condition="!(HasArrivedNorthrend() || InPriorityLocationNorthrend())" >

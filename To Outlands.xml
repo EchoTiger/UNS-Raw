@@ -82,10 +82,10 @@ ProfileManager.LoadNew(ProfileManager.XmlLocation);
 			</While>
 		</If>
 		<!-- /// Item Teleportation Logic.   Teleport to area that has portals (Shrine/etc) or teleport to destination /// -->
-		<If Condition="!HasArrivedOutland() &amp;&amp; HearthIsPriorityLocationOutland() &amp;&amp; !InPriorityLocationOutland()" >
+		<If Condition="!HasArrivedOutland() &amp;&amp; HearthIsPriorityLocationOutland() &amp;&amp; !InPriorityLocationOutland() &amp;&amp; HasHearthOutland()" >
 			<CustomBehavior File="RunCode" Code="OutlandLog(Colors.LightGreen, &quot;Hearthing would be faster to reach our destination, attempting to Hearth!&quot;);" />
 			<CustomBehavior File="ForcedDismount" />
-			<While Condition="!(HasArrivedOutland() || InPriorityLocationOutland()) &amp;&amp; HasHearthOutland()" >
+			<While Condition="!(HasArrivedOutland() || InPriorityLocationOutland())" >
 				<CustomBehavior File="RunCode" Code="await Coroutine.Wait(1800000, () => HearthIsReadyOutland());" />
 				<CustomBehavior File="Misc\RunLua" Lua="UseItemByName(6948); UseItemByName(64488); CastSpellByID(556);" WaitTime="500" />
 				<CustomBehavior File="WaitTimer" WaitTime="50000" TerminateWhen="HasArrivedOutland() || InPriorityLocationOutland() || CastingInterruptedOutland()" />
@@ -242,7 +242,7 @@ ProfileManager.LoadNew(ProfileManager.XmlLocation);
 			</While>
 		</If>
 		<!-- /// Item Teleportation Logic.   Teleport to area that has portals (Shrine/etc) or teleport to destination /// -->
-		<If Condition="!HasArrivedOutland() &amp;&amp; HearthIsPriorityLocationOutland() &amp;&amp; !InPriorityLocationOutland()" >
+		<If Condition="!HasArrivedOutland() &amp;&amp; HearthIsPriorityLocationOutland() &amp;&amp; !InPriorityLocationOutland() &amp;&amp; HasHearthOutland()" >
 			<CustomBehavior File="RunCode" Code="OutlandLog(Colors.LightGreen, &quot;Hearthing would be faster to reach our destination, attempting to Hearth!&quot;);" />
 			<CustomBehavior File="ForcedDismount" />
 			<While Condition="!(HasArrivedOutland() || InPriorityLocationOutland())" >

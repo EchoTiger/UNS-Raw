@@ -113,10 +113,10 @@ ProfileManager.LoadNew(ProfileManager.XmlLocation);
 			</While>
 		</If>
 		<!-- /// Item Teleportation Logic.   Teleport to area that has portals (Shrine/etc) or teleport to destination /// -->
-		<If Condition="!HasArrivedDraenor() &amp;&amp; HearthIsPriorityLocationDraenor() &amp;&amp; !InPriorityLocationDraenor()" >
+		<If Condition="!HasArrivedDraenor() &amp;&amp; HearthIsPriorityLocationDraenor() &amp;&amp; !InPriorityLocationDraenor() &amp;&amp; HasHearthDraenor()" >
 			<CustomBehavior File="RunCode" Code="DraenorLog(Colors.LightGreen, &quot;Hearthing would be faster to reach our destination, attempting to Hearth!&quot;);" />
 			<CustomBehavior File="ForcedDismount" />
-			<While Condition="!(HasArrivedDraenor() || InPriorityLocationDraenor()) &amp;&amp; HasHearthDraenor()" >
+			<While Condition="!(HasArrivedDraenor() || InPriorityLocationDraenor())" >
 				<CustomBehavior File="RunCode" Code="await Coroutine.Wait(1800000, () => HearthIsReadyDraenor());" />
 				<CustomBehavior File="Misc\RunLua" Lua="UseItemByName(6948); UseItemByName(64488); CastSpellByID(556);" WaitTime="500" />
 				<CustomBehavior File="WaitTimer" WaitTime="50000" TerminateWhen="HasArrivedDraenor() || InPriorityLocationDraenor() || CastingInterruptedDraenor()" />
@@ -268,7 +268,7 @@ ProfileManager.LoadNew(ProfileManager.XmlLocation);
 			</While>
 		</If>
 		<!-- /// Item Teleportation Logic.   Teleport to area that has portals (Shrine/etc) or teleport to destination /// -->
-		<If Condition="!HasArrivedDraenor() &amp;&amp; HearthIsPriorityLocationDraenor() &amp;&amp; !InPriorityLocationDraenor()" >
+		<If Condition="!HasArrivedDraenor() &amp;&amp; HearthIsPriorityLocationDraenor() &amp;&amp; !InPriorityLocationDraenor() &amp;&amp; HasHearthDraenor()" >
 			<CustomBehavior File="RunCode" Code="DraenorLog(Colors.LightGreen, &quot;Hearthing would be faster to reach our destination, attempting to Hearth!&quot;);" />
 			<CustomBehavior File="ForcedDismount" />
 			<While Condition="!(HasArrivedDraenor() || InPriorityLocationDraenor())" >
