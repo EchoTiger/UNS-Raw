@@ -57,7 +57,7 @@ ProfileManager.LoadNew(ProfileManager.XmlLocation);
 		if (SpellManager.CanCast(556)) return true; // Astral Recall
 		return false;
 	}
-	bool CastingInterruptedKalimdor()
+	bool CastingInterruptedNorthrend()
 	{
 		if (StyxWoW.Me.Combat || !Me.IsCasting) return true;
 		return false;
@@ -79,7 +79,7 @@ ProfileManager.LoadNew(ProfileManager.XmlLocation);
 			<CustomBehavior File="ForcedDismount" />
 			<While Condition="!HasArrivedNorthrend()" >
 				<CustomBehavior File="Misc\RunLua" Lua="CastSpellByID(53140);" WaitTime="500" />
-				<CustomBehavior File="WaitTimer" WaitTime="50000" TerminateWhen="HasArrivedNorthrend() || CastingInterruptedKalimdor()" />
+				<CustomBehavior File="WaitTimer" WaitTime="50000" TerminateWhen="HasArrivedNorthrend() || CastingInterruptedNorthrend()" />
 			</While>
 		</If>
 		<!-- /// Item Teleportation Logic.   Teleport to area that has portals (Shrine/etc) or teleport to destination /// -->
@@ -89,7 +89,7 @@ ProfileManager.LoadNew(ProfileManager.XmlLocation);
 			<While Condition="!(HasArrivedNorthrend() || InPriorityLocationNorthrend())" >
 				<CustomBehavior File="RunCode" Code="await Coroutine.Wait(1800000, () => HearthIsReadyNorthrend() || InPriorityLocationNorthrend());" />
 				<CustomBehavior File="Misc\RunLua" Lua="UseItemByName(6948); UseItemByName(64488); CastSpellByID(556);" WaitTime="500" />
-				<CustomBehavior File="WaitTimer" WaitTime="50000" TerminateWhen="HasArrivedNorthrend() || InPriorityLocationNorthrend() || CastingInterruptedKalimdor()" />
+				<CustomBehavior File="WaitTimer" WaitTime="50000" TerminateWhen="HasArrivedNorthrend() || InPriorityLocationNorthrend() || CastingInterruptedNorthrend()" />
 			</While>
 		</If>
 		<!-- /// Generic Logic /// -->
@@ -166,7 +166,7 @@ ProfileManager.LoadNew(ProfileManager.XmlLocation);
 				<If Condition="Me.BagItems.FirstOrDefault(h => h.Entry == 110560).CooldownTimeLeft.TotalMilliseconds == 0 &amp;&amp; Me.ZoneId != 7078" > <!-- Can cast G-Hearth and Outside of Garrison. -->
 					<While Condition="Me.ZoneId != 7078" >
 						<CustomBehavior File="Misc\RunLua" Lua="UseItemByName(110560);" WaitTime="500" />
-						<CustomBehavior File="WaitTimer" WaitTime="50000" TerminateWhen="Me.ZoneId == 7078 || CastingInterruptedKalimdor()" />
+						<CustomBehavior File="WaitTimer" WaitTime="50000" TerminateWhen="Me.ZoneId == 7078 || CastingInterruptedNorthrend()" />
 					</While>
 					<Else>
 						<MoveTo DestName="Garrison" X="1866.757" Y="222.1068" Z="76.69209" />
@@ -228,7 +228,7 @@ ProfileManager.LoadNew(ProfileManager.XmlLocation);
 			<CustomBehavior File="ForcedDismount" />
 			<While Condition="!HasArrivedNorthrend()" >
 				<CustomBehavior File="Misc\RunLua" Lua="CastSpellByID(53140);" WaitTime="500" />
-				<CustomBehavior File="WaitTimer" WaitTime="50000" TerminateWhen="HasArrivedNorthrend() || CastingInterruptedKalimdor()" />
+				<CustomBehavior File="WaitTimer" WaitTime="50000" TerminateWhen="HasArrivedNorthrend() || CastingInterruptedNorthrend()" />
 			</While>
 		</If>
 		<!-- /// Item Teleportation Logic.   Teleport to area that has portals (Shrine/etc) or teleport to destination /// -->
@@ -238,7 +238,7 @@ ProfileManager.LoadNew(ProfileManager.XmlLocation);
 			<While Condition="!(HasArrivedNorthrend() || InPriorityLocationNorthrend())" >
 				<CustomBehavior File="RunCode" Code="await Coroutine.Wait(1800000, () => HearthIsReadyNorthrend() || InPriorityLocationNorthrend());" />
 				<CustomBehavior File="Misc\RunLua" Lua="UseItemByName(6948); UseItemByName(64488); CastSpellByID(556);" WaitTime="500" />
-				<CustomBehavior File="WaitTimer" WaitTime="50000" TerminateWhen="HasArrivedNorthrend() || InPriorityLocationNorthrend() || CastingInterruptedKalimdor()" />
+				<CustomBehavior File="WaitTimer" WaitTime="50000" TerminateWhen="HasArrivedNorthrend() || InPriorityLocationNorthrend() || CastingInterruptedNorthrend()" />
 			</While>
 		</If>
 		<!-- /// Generic Logic /// -->
@@ -285,7 +285,7 @@ ProfileManager.LoadNew(ProfileManager.XmlLocation);
 				<If Condition="Me.BagItems.FirstOrDefault(h => h.Entry == 110560).CooldownTimeLeft.TotalMilliseconds == 0 &amp;&amp; Me.ZoneId != 7004" > <!-- Can cast G-Hearth and Outside of Garrison. -->
 					<While Condition="Me.ZoneId != 7004" >
 						<CustomBehavior File="Misc\RunLua" Lua="UseItemByName(110560);" WaitTime="500" />
-						<CustomBehavior File="WaitTimer" WaitTime="50000" TerminateWhen="Me.ZoneId == 7004 || CastingInterruptedKalimdor()" />
+						<CustomBehavior File="WaitTimer" WaitTime="50000" TerminateWhen="Me.ZoneId == 7004 || CastingInterruptedNorthrend()" />
 					</While>
 					<Else>
 						<MoveTo DestName="Garrison" X="5592.404" Y="4529.675" Z="126.3718" />
